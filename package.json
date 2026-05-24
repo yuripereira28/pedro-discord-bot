@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "Discord HR assistant bot",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-  "discord.js": "^14.15.3",
-  "express": "^4.19.2"
-}
+    "discord.js": "^14.15.3",
+    "express": "^4.19.2"
+  }
 }
