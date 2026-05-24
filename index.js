@@ -1,10 +1,10 @@
-const express = require('express');
+import express from 'express';
 
-const {
+import {
   Client,
   GatewayIntentBits,
   Partials
-} = require('discord.js');
+} from 'discord.js';
 
 const app = express();
 
@@ -28,7 +28,7 @@ const client = new Client({
   ]
 });
 
-client.once('ready', () => {
+client.on('ready', () => {
   console.log(`Bot online: ${client.user.tag}`);
 });
 
