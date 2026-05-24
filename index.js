@@ -1,8 +1,22 @@
+import express from 'express';
+
 import {
   Client,
   GatewayIntentBits,
   Partials
 } from 'discord.js';
+
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Pedro bot online!');
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor web ativo na porta ${PORT}`);
+});
 
 const client = new Client({
   intents: [
@@ -22,10 +36,8 @@ client.on('messageCreate', async (message) => {
 
   try {
 
-    // Ignora bots
     if (message.author.bot) return;
 
-    // Aceita SOMENTE DM
     if (!message.channel.isDMBased()) return;
 
     console.log(
