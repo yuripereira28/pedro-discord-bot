@@ -3,7 +3,9 @@ import express from 'express';
 import {
   Client,
   GatewayIntentBits,
-  Partials
+  REST,
+  Routes,
+  SlashCommandBuilder
 } from 'discord.js';
 
 const app = express();
@@ -20,37 +22,66 @@ app.listen(PORT, () => {
 
 const client = new Client({
   intents: [
-    GatewayIntentBits.DirectMessages,
-    GatewayIntentBits.MessageContent
-  ],
-  partials: [
-    Partials.Channel
+    GatewayIntentBits.Guilds
   ]
 });
 
-client.on('ready', () => {
-  console.log(`Bot online: ${client.user.tag}`);
-});
+const commands = [
+  new SlashCommandBuilder()
+    .setName('pedro')
+    .setDescription('Falar com o assistente de RH')
+    .addStringOption(option =>
+      option
+        .setName('mensagem')
+        .setDescription('Sua pergunta')
+        .setRequired(true)
+    )
+    .toJSON()
+];
 
-client.on('messageCreate', async (message) => {
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_BOT_TOKEN);
+
+async function registerCommands() {
 
   try {
 
-    if (message.author.bot) return;
+    console.log('Registrando slash commands...');
 
-    if (!message.channel.isDMBased()) return;
-
-    console.log(
-      `DM recebida de ${message.author.username}: ${message.content}`
+    await rest.put(
+      Routes.applicationCommands(process.env.CLIENT_ID),
+      { body: commands }
     );
 
-    await message.reply(
-      `Olá ${message.author.username}! 👋\n\nRecebi sua mensagem:\n"${message.content}"`
-    );
+    console.log('Slash commands registrados.');
 
   } catch (error) {
 
-    console.error('Erro ao responder DM:', error);
+    console.error(error);
+
+  }
+
+}
+
+client.once('ready', async () => {
+
+  console.log(`Bot online: ${client.user.tag}`);
+
+  await registerCommands();
+
+});
+
+client.on('interactionCreate', async interaction => {
+
+  if (!interaction.isChatInputCommand()) return;
+
+  if (interaction.commandName === 'pedro') {
+
+    const pergunta = interaction.options.getString('mensagem');
+
+    await interaction.reply({
+      content: `👋 Você perguntou:\n\n"${pergunta}"`,
+      ephemeral: true
+    });
 
   }
 
