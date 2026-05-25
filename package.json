@@ -1,7 +1,7 @@
 {
   "name": "pedro-discord-bot",
   "version": "1.0.0",
-  "description": "Discord HR assistant bot",
+  "description": "Discord RH Bot",
   "main": "index.js",
   "type": "module",
   "scripts": {
